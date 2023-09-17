@@ -2,7 +2,7 @@ import { Controller, } from '@nestjs/common';
 
 import { AppService } from './app.service';
 import { MessagePattern } from "@nestjs/microservices";
-import { GET_USERS } from "@monorepo/microservices";
+import { CREATE_USER, GET_USERS } from "@monorepo/microservices";
 
 @Controller()
 export class AppController {
@@ -10,7 +10,12 @@ export class AppController {
   }
 
   @MessagePattern(GET_USERS)
-  getData() {
-    return this.appService.getData();
+  getUsers() {
+    return this.appService.getUsers();
+  }
+
+  @MessagePattern(CREATE_USER)
+  createUser(data) {
+    return this.appService.createUser(data);
   }
 }

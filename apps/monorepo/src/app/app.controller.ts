@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 
 import { AppService } from './app.service';
 
@@ -8,12 +8,19 @@ export class AppController {
   }
 
   @Get()
-  getData() {
-    return this.appService.getData();
+  checkHealth() {
+    return {
+      isHealthy: true
+    };
   }
 
   @Get('/users')
   getUsers() {
     return this.appService.getUsers();
+  }
+
+  @Post('/users')
+  createUser(@Body() body) {
+    return this.appService.createUser(body)
   }
 }

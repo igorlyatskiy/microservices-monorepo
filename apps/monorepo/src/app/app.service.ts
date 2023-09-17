@@ -1,5 +1,5 @@
 import { Inject, Injectable, OnApplicationBootstrap } from '@nestjs/common';
-import { GET_USERS, usersRmq } from "@monorepo/microservices";
+import { CREATE_USER, GET_USERS, usersRmq } from "@monorepo/microservices";
 import { ClientProxy } from "@nestjs/microservices";
 import { lastValueFrom } from "rxjs";
 
@@ -8,16 +8,15 @@ export class AppService implements OnApplicationBootstrap {
   constructor(@Inject(usersRmq.name) private readonly usersClient: ClientProxy) {
   }
 
-  // TODO: Fix types.
-  async getData(): Promise<any> {
-    return await lastValueFrom(
-      this.usersClient.send('test', {})
-    );
-  }
-
-  async getUsers(): Promise<any[]> {
+  async getUsers() {
     return await lastValueFrom(
       this.usersClient.send(GET_USERS, {})
+    )
+  }
+
+  async createUser(body) {
+    return await lastValueFrom(
+      this.usersClient.send(CREATE_USER, body)
     )
   }
 
