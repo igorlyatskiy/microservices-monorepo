@@ -2,7 +2,9 @@
   "name": "@monorepo/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "start:dev": "nx run-many --all --target=serve"
+  },
   "private": true,
   "dependencies": {
     "@nestjs/common": "^10.0.2",
