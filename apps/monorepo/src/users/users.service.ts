@@ -1,10 +1,10 @@
 import { Inject, Injectable, OnApplicationBootstrap } from '@nestjs/common';
-import { CREATE_USER, GET_USERS, usersRmq } from "@monorepo/microservices";
+import { CREATE_USER, CreateUserDto, GET_USERS, usersRmq } from "@monorepo/microservices";
 import { ClientProxy } from "@nestjs/microservices";
 import { lastValueFrom } from "rxjs";
 
 @Injectable()
-export class AppService implements OnApplicationBootstrap {
+export class UsersService implements OnApplicationBootstrap {
   constructor(@Inject(usersRmq.name) private readonly usersClient: ClientProxy) {
   }
 
@@ -14,9 +14,9 @@ export class AppService implements OnApplicationBootstrap {
     )
   }
 
-  async createUser(body) {
+  async createUser(dto: CreateUserDto) {
     return await lastValueFrom(
-      this.usersClient.send(CREATE_USER, body)
+      this.usersClient.send(CREATE_USER, dto)
     )
   }
 

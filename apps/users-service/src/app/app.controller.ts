@@ -1,8 +1,8 @@
 import { Controller, } from '@nestjs/common';
 
 import { AppService } from './app.service';
-import { MessagePattern } from "@nestjs/microservices";
-import { CREATE_USER, GET_USERS } from "@monorepo/microservices";
+import { MessagePattern, Payload, } from "@nestjs/microservices";
+import { CREATE_USER, CreateUserDto, GET_USERS } from "@monorepo/microservices";
 
 @Controller()
 export class AppController {
@@ -15,7 +15,7 @@ export class AppController {
   }
 
   @MessagePattern(CREATE_USER)
-  createUser(data) {
+  createUser(@Payload() data: CreateUserDto) {
     return this.appService.createUser(data);
   }
 }

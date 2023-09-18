@@ -1,7 +1,9 @@
 import { Repository } from "typeorm";
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "./user.entity";
+import { CreateUserDto } from "@monorepo/microservices";
+import { RpcException } from "@nestjs/microservices";
 
 @Injectable()
 export class AppService {
@@ -15,8 +17,14 @@ export class AppService {
     return this.userRepository.find()
   }
 
-  async createUser(data) {
-    const user = this.userRepository.create(data);
+  async createUser(dto: CreateUserDto) {
+    const existing = this.userRepository.findBy({email: dto.email})
+
+    if (existing) {
+      throw new ConflictException('User with such email already exists')
+    }
+
+    const user = this.userRepository.create(dto);
 
     return this.userRepository.save(user);
   }

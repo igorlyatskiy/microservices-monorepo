@@ -1,19 +1,11 @@
 import { Module } from '@nestjs/common';
-
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { ClientsModule } from "@nestjs/microservices";
-import { usersRmq } from "@monorepo/microservices";
+import { AppController } from "./app.controller";
+import { UsersModule } from "../users/users.module";
 
 @Module({
-  imports: [ ClientsModule.register([
-    {
-      name: usersRmq.name,
-      ...usersRmq.config
-    }
-  ]) ],
+  imports: [ UsersModule],
   controllers: [ AppController ],
-  providers: [ AppService ],
+  providers: [  ],
 })
 export class AppModule {
 }
