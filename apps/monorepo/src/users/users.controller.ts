@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
-import { CreateUserDto } from "@monorepo/microservices";
+import { CreatePostDto } from "@monorepo/microservices";
 
 import { UsersService } from "./users.service";
 
@@ -14,7 +14,7 @@ export class UsersController {
   }
 
   @Post()
-  createUser(@Body() body: CreateUserDto) {
+  createUser(@Body() body: CreatePostDto) {
     return this.usersService.createUser(body)
   }
 }

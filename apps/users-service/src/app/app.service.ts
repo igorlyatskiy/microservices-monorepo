@@ -2,7 +2,7 @@ import { Repository } from "typeorm";
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "./user.entity";
-import { CreateUserDto } from "@monorepo/microservices";
+import { CreatePostDto } from "@monorepo/microservices";
 import { RpcException } from "@nestjs/microservices";
 
 @Injectable()
@@ -17,7 +17,7 @@ export class AppService {
     return this.userRepository.find()
   }
 
-  async createUser(dto: CreateUserDto) {
+  async createUser(dto: CreatePostDto) {
     const existing = this.userRepository.findBy({email: dto.email})
 
     if (existing) {
