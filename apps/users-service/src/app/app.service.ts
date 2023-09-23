@@ -18,7 +18,7 @@ export class AppService {
   }
 
   async createUser(dto: CreatePostDto) {
-    const existing = this.userRepository.findBy({email: dto.email})
+    const existing = await this.userRepository.findOneBy({ email: dto.email })
 
     if (existing) {
       throw new ConflictException('User with such email already exists')
