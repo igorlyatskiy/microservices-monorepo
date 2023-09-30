@@ -18,9 +18,15 @@ export class AppService {
   }
 
   async getUserPosts(creatorId: string) {
-    return this.postRepository.findBy({
+    const userPosts = await this.postRepository.findBy({
       creatorId
     })
+
+    return userPosts.map((item) => ({
+      postId: item.postId,
+      title: item.title,
+      body: item.body
+    }));
   }
 
   async createPost(dto: CreatePostDto) {

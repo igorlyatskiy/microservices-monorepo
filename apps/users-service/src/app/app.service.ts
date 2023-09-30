@@ -2,7 +2,7 @@ import { Repository } from "typeorm";
 import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "./user.entity";
-import { CreateUserDto, GET_POSTS, postsRmq } from "@monorepo/microservices";
+import { CreateUserDto, GET_POST_BY_USER, postsRmq } from "@monorepo/microservices";
 import { ClientProxy } from "@nestjs/microservices";
 import { lastValueFrom } from "rxjs";
 
@@ -19,7 +19,7 @@ export class AppService {
 
     return await Promise.all(users.map(async (item) => {
       const posts = await lastValueFrom(
-        this.postsClient.send(GET_POSTS, { userId: item.userId })
+        this.postsClient.send(GET_POST_BY_USER, { userId: item.userId })
       )
 
       return {
