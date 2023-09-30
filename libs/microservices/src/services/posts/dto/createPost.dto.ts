@@ -1,13 +1,13 @@
-import { IsNotEmpty, IsEmail } from 'class-validator';
+import { IsNotEmpty, IsUUID } from 'class-validator';
 
 export class CreatePostDto {
   @IsNotEmpty()
-  @IsEmail()
-  email: string;
+  title: string;
 
   @IsNotEmpty()
-  phone: string;
+  body: string;
 
   @IsNotEmpty()
-  nickname: string;
+  @IsUUID()
+  creatorId: string;
 }

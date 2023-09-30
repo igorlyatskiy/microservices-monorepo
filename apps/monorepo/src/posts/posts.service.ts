@@ -1,5 +1,5 @@
 import { Inject, Injectable, OnApplicationBootstrap } from '@nestjs/common';
-import { GET_POSTS, postsRmq, } from "@monorepo/microservices";
+import { CREATE_POST, CreatePostDto, GET_POSTS, postsRmq, } from "@monorepo/microservices";
 import { ClientProxy } from "@nestjs/microservices";
 import { lastValueFrom } from "rxjs";
 
@@ -11,6 +11,12 @@ export class PostsService implements OnApplicationBootstrap {
   async getPosts() {
     return await lastValueFrom(
       this.postsClient.send(GET_POSTS, {})
+    )
+  }
+
+  async createPost(data: CreatePostDto) {
+    return await lastValueFrom(
+      this.postsClient.send(CREATE_POST, data)
     )
   }
 

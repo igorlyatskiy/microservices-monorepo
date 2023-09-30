@@ -1,23 +1,35 @@
 import { Repository } from "typeorm";
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "./user.entity";
-import { CreatePostDto } from "@monorepo/microservices";
-import { RpcException } from "@nestjs/microservices";
+import { CreateUserDto, GET_POSTS, postsRmq } from "@monorepo/microservices";
+import { ClientProxy } from "@nestjs/microservices";
+import { lastValueFrom } from "rxjs";
 
 @Injectable()
 export class AppService {
   constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @Inject(postsRmq.name) private readonly postsClient: ClientProxy,
   ) {
   }
 
   async getUsers() {
-    return this.userRepository.find()
+    const users = await this.userRepository.find();
+
+    return await Promise.all(users.map(async (item) => {
+      const posts = await lastValueFrom(
+        this.postsClient.send(GET_POSTS, { userId: item.userId })
+      )
+
+      return {
+        ...item,
+        posts
+      }
+    }))
   }
 
-  async createUser(dto: CreatePostDto) {
+  async createUser(dto: CreateUserDto) {
     const existing = await this.userRepository.findOneBy({ email: dto.email })
 
     if (existing) {
