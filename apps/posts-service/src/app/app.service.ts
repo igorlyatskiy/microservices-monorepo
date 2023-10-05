@@ -29,11 +29,17 @@ export class AppService {
         this.commentsClient.send(GET_POST_COMMENTS, { postId: item.postId })
       )
 
+      const preparedComments = comments.map((item) => ({
+        commentId: item.commentId,
+        creatorId: item.creatorId,
+        body: item.body
+      }))
+
       return {
         postId: item.postId,
         title: item.title,
         body: item.body,
-        comments
+        comments: preparedComments
       }
     }))
   }
