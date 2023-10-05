@@ -10,7 +10,7 @@ export class AppController {
   }
 
   @MessagePattern(GET_POST_COMMENTS)
-  getData() {
-    return this.appService.getData();
+  getPostComments({ postId }: { postId: string }) {
+    return this.appService.getPostComments(postId);
   }
 }

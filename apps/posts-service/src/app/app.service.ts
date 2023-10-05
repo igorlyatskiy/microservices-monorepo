@@ -1,15 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
 import { Post } from "./post.entity";
-import { CreatePostDto } from "@monorepo/microservices";
+import { commentsRmq, CreatePostDto, GET_POST_COMMENTS, } from "@monorepo/microservices";
+import { lastValueFrom } from 'rxjs';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class AppService {
   constructor(
-    @InjectRepository(Post)
-    private readonly postRepository: Repository<Post>
+    @InjectRepository(Post) private readonly postRepository: Repository<Post>,
+    @Inject(commentsRmq.name) private readonly commentsClient: ClientProxy,
   ) {
   }
 
@@ -22,11 +24,18 @@ export class AppService {
       creatorId
     })
 
-    return userPosts.map((item) => ({
-      postId: item.postId,
-      title: item.title,
-      body: item.body
-    }));
+    return await Promise.all(userPosts.map(async (item) => {
+      const comments = await lastValueFrom(
+        this.commentsClient.send(GET_POST_COMMENTS, { postId: item.postId })
+      )
+
+      return {
+        postId: item.postId,
+        title: item.title,
+        body: item.body,
+        comments
+      }
+    }))
   }
 
   async createPost(dto: CreatePostDto) {
